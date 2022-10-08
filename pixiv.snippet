@@ -1,6 +1,6 @@
-#Pixiv解锁Premium|热门前30预览
-^https:\/\/app-api\.pixiv\.net\/v1\/search\/illust\?.*sort=(popular_desc|popular_female_desc|popular_male_desc) url script-response-body https://raw.githubusercontent.com/qianli-Koi/QuantumultX-Script/main/pixiv-popular.js
-^https:\/\/app-api\.pixiv\.net\/v1\/user\/detail|^https:\/\/oauth\.secure\.pixiv\.net\/auth\/token url script-response-body https://raw.githubusercontent.com/qianli-Koi/QuantumultX-Script/main/pixiv.js
-^https:\/\/www\.pixiv\.net\/touch\/ajax\/user\/self\/status|https:\/\/www\.pixiv\.net\/touch\/ajax_api\/ajax_api\.php\?mode=get_user_data|^https:\/\/www.pixiv.net\/.*?.php\?mode=r18 url script-response-body https://raw.githubusercontent.com/qianli-Koi/QuantumultX-Script/main/pixiv.js
-https://i.pximg.net - request-header Accept:.+ request-header Referer: https://www.pixiv.net/
-hostname=i.pximg.net,*.pixiv.net
+^https:\/\/app-api\.pixiv\.net\/v1\/search\/illust\?.*sort=(popular_desc|popular_female_desc|popular_male_desc) url script-request-header https://github.com/qianli-Koi/QuantumultX-Script/raw/main/pixiv-popular.js
+#app
+^https:\/\/app-api\.pixiv\.net\/v1\/user\/detail|^https:\/\/oauth\.secure\.pixiv\.net\/auth\/token url script-response-body https://github.com/qianli-Koi/QuantumultX-Script/raw/main/pixiv.js
+#web
+^https:\/\/www\.pixiv\.net\/touch\/ajax\/user\/self\/status|https:\/\/www\.pixiv\.net\/touch\/ajax_api\/ajax_api\.php\?mode=get_user_data|^https:\/\/www.pixiv.net\/.*?.php\?mode=r18 url script-response-body https://github.com/qianli-Koi/QuantumultX-Script/raw/main/pixiv.js
+hostname=www.pixiv.net,app-api.pixiv.net,oauth.secure.pixiv.net
