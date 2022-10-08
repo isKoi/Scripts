@@ -1,4 +1,4 @@
-#Exhentai网页优化
-https:\/\/exhentai\.org\/g\/.*|https:\/\/e-hentai\.org\/g\/.* url response-body <body> response-body <body><script>(function(){var s=document.createElement("script");s.setAttribute("id","exReader");s.setAttribute("src", "https://manakanemu.github.io/ExHentaiReader/Reader.js");s.setAttribute("fontsize","15");s.setAttribute("tag-fontsize","15");s.setAttribute("toolbar-size","0");s.setAttribute("line-color","#FFFFFF");s.setAttribute("translate","true");s.setAttribute("rebuild","true");s.setAttribute("openBlank","false");document.body.appendChild(s);}())</script>
-e-hentai.org|exhentai.org - request-header Accept-Language:.* request-header Accept-Language: en-us
-hostname=exhentai.org,e-hentai.org
+^https:\/\/exhentai\.org\/g\/.*|^https:\/\/e-hentai\.org\/g\/.* url response-body </body> response-body <script async="async" id="exReader" src="https://manakanemu.github.io/ExHentaiReader/Reader.js?1653926172" fontsize=20 tag-fontsize=20 toolbar-size=65 line-color=#FFFFFF translate=true rebuild=true openBlank=false></script></body>
+^https:\/\/exhentai\.org(.*search)? - response-body </body> response-body <script async="async" id="exReader" src="https://manakanemu.github.io/ExHentaiReader/Reader_V2.min.js?"></script></body>
+e-hentai.org|exhentai.org - request-header Cookie:.* request-header Cookie: ipb_member_id=6210097;ipb_pass_hash=6633ccfac561fb46fcc8831b86863932;igneous=9f5988e6c;
+hostname=exhentai.org,e-hentai.org,forums.e-hentai.org

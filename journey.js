@@ -1,32 +1,91 @@
-const $ = new Env("Journey");
-const timestamp = Math.floor(Date.now());
-console.log($response.body);
-const lasttimestamp = $.read("Journeytimestamp");
-if ($request.headers["x-gk-bundle-id"].indexOf("Journey")>=0){
-if ($request.url.indexOf("/relayUpdate")>=0&&$response.body.indexOf("<key>status</key><integer>0</integer>")>=0&&timestamp-lasttimestamp>1200) {
-$notify("Journey",`重新连接`);
-console.log(`Journey重新连接`);
-};
-if ($response.body.indexOf("<key>self-relay-ip</key>")>=0) {
-if ($request.url.indexOf("/relayUpdate")>=0) {
-$notify("Journey",`重新连接`);
-console.log(`Journey重新连接`);
-};
-if ($request.url.indexOf("/relayInitiate")>=0) {
-$notify("Journey",`开始新连接`);
-console.log(`Journey开始新连接`);
- };
-};
-if ($request.url.indexOf("match")>=0&&$response.body.indexOf("<key>player-id</key>")>=0&&timestamp-lasttimestamp>1200) {
- var matchid = $response.body;
- var regex = /([\s\S]*)<key>player-id<\/key><string>(.*?)<\/string>([\s\S]*)/;
- matchid = matchid.replace(regex,"$2");
- $notify("Journey",`匹配到${matchid}`);
- console.log(`匹配到${matchid}`);
- };
-};
+let PlistParser = (function(){
+  function PlistParser() {}
+  PlistParser.parse=function(plist_xml){try{if(typeof Titanium.XML!='undefined'){plist_xml=Titanium.XML.parseString(plist_xml);}}catch(e){var parser=new DOMParser();plist_xml=parser.parseFromString(plist_xml,'text/xml');}
+      var result=this._xml_to_json(plist_xml.getElementsByTagName('plist').item(0));return result;};PlistParser._xml_to_json=function(xml_node){var parser=this;var parent_node=xml_node;var parent_node_name=parent_node.nodeName;var child_nodes=[];for(var i=0;i<parent_node.childNodes.length;++i){var child=parent_node.childNodes.item(i);if(child.nodeName!='#text'){child_nodes.push(child);};};switch(parent_node_name){case'plist':if(child_nodes.length>1){var plist_array=[];for(var i=0;i<child_nodes.length;++i){plist_array.push(parser._xml_to_json(child_nodes[i]));};return plist_array;}else{return parser._xml_to_json(child_nodes[0]);}
+      break;case'dict':var dictionary={};var key_name;var key_value;for(var i=0;i<child_nodes.length;++i){var child=child_nodes[i];if(child.nodeName=='#text'){}else if(child.nodeName=='key'){key_name=PlistParser._textValue(child.firstChild);}else{key_value=parser._xml_to_json(child);dictionary[key_name]=key_value;}}
+      return dictionary;case'array':var standard_array=[];for(var i=0;i<child_nodes.length;++i){var child=child_nodes[i];standard_array.push(parser._xml_to_json(child));}
+      return standard_array;case'string':return PlistParser._textValue(parent_node);case'date':var date=PlistParser._parseDate(PlistParser._textValue(parent_node));return date.toString();case'integer':return parseInt(PlistParser._textValue(parent_node),10);case'real':return parseFloat(PlistParser._textValue(parent_node));case'data':return PlistParser._textValue(parent_node);case'true':return true;case'false':return false;case'#text':break;};};PlistParser._textValue=function(node){if(node.text){return node.text;}else{return node.textContent;};};PlistParser._parseDate=function(date_string){var reISO=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/;var matched_date=reISO.exec(date_string);if(matched_date){return new Date(Date.UTC(+matched_date[1],+matched_date[2]-1,+matched_date[3],+matched_date[4],+matched_date[5],+matched_date[6]));};};PlistParser.serialize=function(_obj){try{if(typeof _obj.toSource!=='undefined'&&typeof _obj.callee==='undefined'){return _obj.toSource();}}catch(e){}
+      switch(typeof _obj){case'number':case'boolean':case'function':return _obj;case'string':return'\''+_obj+'\'';case'object':var str;if(_obj.constructor===Array||typeof _obj.callee!=='undefined'){str='[';var i,len=_obj.length;for(i=0;i<len-1;i++){str+=PlistParser.serialize(_obj[i])+',';}
+          str+=PlistParser.serialize(_obj[i])+']';}
+      else{str='{';var key;for(key in _obj){if(_obj.hasOwnProperty(key)){str+=key+':'+PlistParser.serialize(_obj[key])+',';};};str=str.replace(/\,$/,'')+'}';}
+          return str;default:return'UNKNOWN';};};PlistParser.toPlist=function(obj){var xml='<?xml version="1.0" encoding="UTF-8"?>';xml+='<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">';var container=document.createElement('xml');var plist=document.createElement('plist');plist.setAttribute('version','1.0');container.appendChild(plist);var root=document.createElement('dict');plist.appendChild(root);var getISOString=function(date){function pad(n){return n<10?'0'+n:n}
+      return date.getUTCFullYear()+'-'
+          +pad(date.getUTCMonth()+1)+'-'
+          +pad(date.getUTCDate())+'T'
+          +pad(date.getUTCHours())+':'
+          +pad(date.getUTCMinutes())+':'
+          +pad(date.getUTCSeconds())+'Z';}
+      var walkObj=function(target,obj,callback){for(var i in obj){callback(target,i,obj[i]);}}
+      var processObject=function(target,name,value){var key=document.createElement('key');key.innerHTML=name;target.appendChild(key);if(typeof value=='object'){if(value instanceof Date){var date=document.createElement('date');date.innerHTML=getISOString(value);target.appendChild(date);}else{var dict=document.createElement('dict');walkObj(dict,value,processObject)
+          target.appendChild(dict);}}else if(typeof value=='boolean'){var bool=document.createElement(value.toString());target.appendChild(bool);}else{var string=document.createElement('string');string.innerHTML=value;target.appendChild(string);}};walkObj(root,obj,processObject);return xml+container.innerHTML;};
+  return PlistParser;
+})();
 
-function Env(t, e) { "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0); class s { constructor(t) { this.env = t } send(t, e = "GET") { t = "string" == typeof t ? { url: t } : t; let s = this.get; return "POST" === e && (s = this.post), new Promise((e, i) => { s.call(this, t, (t, s, r) => { t ? i(t) : e(s) }) }) } get(t) { return this.send.call(this.env, t) } post(t) { return this.send.call(this.env, t, "POST") } } return new class { constructor(t, e) { this.name = t, this.http = new s(this), this.data = null, this.dataFile = "box.dat", this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = "\n", this.startTime = (new Date).getTime(), Object.assign(this, e), this.log("", `🔔${this.name}, 开始!`) } isNode() { return "undefined" != typeof module && !!module.exports } isQuanX() { return "undefined" != typeof $task } isSurge() { return "undefined" != typeof $httpClient && "undefined" == typeof $loon } isLoon() { return "undefined" != typeof $loon } toObj(t, e = null) { try { return JSON.parse(t) } catch { return e } } toStr(t, e = null) { try { return JSON.stringify(t) } catch { return e } } getjson(t, e) { let s = e; const i = this.read(t); if (i) try { s = JSON.parse(this.read(t)) } catch { } return s } setjson(t, e) { try { return this.setdata(JSON.stringify(t), e) } catch { return !1 } } getScript(t) { return new Promise(e => { this.get({ url: t }, (t, s, i) => e(i)) }) } runScript(t, e) { return new Promise(s => { let i = this.read("@chavy_boxjs_userCfgs.httpapi"); i = i ? i.replace(/\n/g, "").trim() : i; let r = this.read("@chavy_boxjs_userCfgs.httpapi_timeout"); r = r ? 1 * r : 20, r = e && e.timeout ? e.timeout : r; const [o, h] = i.split("@"), n = { url: `http://${h}/v1/scripting/evaluate`, body: { script_text: t, mock_type: "cron", timeout: r }, headers: { "X-Key": o, Accept: "*/*" } }; this.post(n, (t, e, i) => s(i)) }).catch(t => this.logErr(t)) } loaddata() { if (!this.isNode()) return {}; { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e); if (!s && !i) return {}; { const i = s ? t : e; try { return JSON.parse(this.fs.readFileSync(i)) } catch (t) { return {} } } } } writedata() { if (this.isNode()) { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e), r = JSON.stringify(this.data); s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r) } } lodash_get(t, e, s) { const i = e.replace(/\[(\d+)\]/g, ".$1").split("."); let r = t; for (const t of i) if (r = Object(r)[t], void 0 === r) return s; return r } lodash_set(t, e, s) { return Object(t) !== t ? t : (Array.isArray(e) || (e = e.toString().match(/[^.[\]]+/g) || []), e.slice(0, -1).reduce((t, s, i) => Object(t[s]) === t[s] ? t[s] : t[s] = Math.abs(e[i + 1]) >> 0 == +e[i + 1] ? [] : {}, t)[e[e.length - 1]] = s, t) } read(t) { let e = this.getval(t); if (/^@/.test(t)) { const [, s, i] = /^@(.*?)\.(.*?)$/.exec(t), r = s ? this.getval(s) : ""; if (r) try { const t = JSON.parse(r); e = t ? this.lodash_get(t, i, "") : e } catch (t) { e = "" } } return e } setdata(t, e) { let s = !1; if (/^@/.test(e)) { const [, i, r] = /^@(.*?)\.(.*?)$/.exec(e), o = this.getval(i), h = i ? "null" === o ? null : o || "{}" : "{}"; try { const e = JSON.parse(h); this.lodash_set(e, r, t), s = this.setval(JSON.stringify(e), i) } catch (e) { const o = {}; this.lodash_set(o, r, t), s = this.setval(JSON.stringify(o), i) } } else s = this.setval(t, e); return s } getval(t) { return this.isSurge() || this.isLoon() ? $persistentStore.read(t) : this.isQuanX() ? $prefs.valueForKey(t) : this.isNode() ? (this.data = this.loaddata(), this.data[t]) : this.data && this.data[t] || null } setval(t, e) { return this.isSurge() || this.isLoon() ? $persistentStore.write(t, e) : this.isQuanX() ? $prefs.setValueForKey(t, e) : this.isNode() ? (this.data = this.loaddata(), this.data[e] = t, this.writedata(), !0) : this.data && this.data[e] || null } initGotEnv(t) { this.got = this.got ? this.got : require("got"), this.cktough = this.cktough ? this.cktough : require("tough-cookie"), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t && (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar)) } get(t, e = (() => { })) { t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]), this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.get(t, (t, s, i) => { !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i) })) : this.isQuanX() ? (this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => e(t))) : this.isNode() && (this.initGotEnv(t), this.got(t).on("redirect", (t, e) => { try { if (t.headers["set-cookie"]) { const s = t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString(); s && this.ckjar.setCookieSync(s, null), e.cookieJar = this.ckjar } } catch (t) { this.logErr(t) } }).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => { const { message: s, response: i } = t; e(s, i, i && i.body) })) } post(t, e = (() => { })) { if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.post(t, (t, s, i) => { !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i) }); else if (this.isQuanX()) t.method = "POST", this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => e(t)); else if (this.isNode()) { this.initGotEnv(t); const { url: s, ...i } = t; this.got.post(s, i).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => { const { message: s, response: i } = t; e(s, i, i && i.body) }) } } time(t, e = null) { const s = e ? new Date(e) : new Date; let i = { "M+": s.getMonth() + 1, "d+": s.getDate(), "H+": s.getHours(), "m+": s.getMinutes(), "s+": s.getSeconds(), "q+": Math.floor((s.getMonth() + 3) / 3), S: s.getMilliseconds() }; /(y+)/.test(t) && (t = t.replace(RegExp.$1, (s.getFullYear() + "").substr(4 - RegExp.$1.length))); for (let e in i) new RegExp("(" + e + ")").test(t) && (t = t.replace(RegExp.$1, 1 == RegExp.$1.length ? i[e] : ("00" + i[e]).substr(("" + i[e]).length))); return t } msg(e = t, s = "", i = "", r) { const o = t => { if (!t) return t; if ("string" == typeof t) return this.isLoon() ? t : this.isQuanX() ? { "open-url": t } : this.isSurge() ? { url: t } : void 0; if ("object" == typeof t) { if (this.isLoon()) { let e = t.openUrl || t.url || t["open-url"], s = t.mediaUrl || t["media-url"]; return { openUrl: e, mediaUrl: s } } if (this.isQuanX()) { let e = t["open-url"] || t.url || t.openUrl, s = t["media-url"] || t.mediaUrl; return { "open-url": e, "media-url": s } } if (this.isSurge()) { let e = t.url || t.openUrl || t["open-url"]; return { url: e } } } }; if (this.isMute || (this.isSurge() || this.isLoon() ? $notification.post(e, s, i, o(r)) : this.isQuanX() && $notify(e, s, i, o(r))), !this.isMuteLog) { let t = ["", "==============📣系统通知📣=============="]; t.push(e), s && t.push(s), i && t.push(i), console.log(t.join("\n")), this.logs = this.logs.concat(t) } } log(...t) { t.length > 0 && (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator)) } logErr(t, e) { const s = !this.isSurge() && !this.isQuanX() && !this.isLoon(); s ? this.log("", `❗️${this.name}, 错误!`, t.stack) : this.log("", `❗️${this.name}, 错误!`, t) } wait(t) { return new Promise(e => setTimeout(e, t)) } done(t = {}) { const e = (new Date).getTime(), s = (e - this.startTime) / 1e3; this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t) } }(t, e) }
-$.setdata(`${timestamp}`,"Journeytimestamp");
-console.log(timestamp);
-$done();
+////////////////////////////////////////////////
+const $ = API('Journey', true);
+let resBody = PlistParser.parse($response.body);
+const path = $request.path;
+let playerInfoMap = $.read('journeyPlayerInfoMap');
+playerInfoMap = playerInfoMap ? new Map(JSON.parse(playerInfoMap)) : new Map();
+const timesTamp = new Date().getTime();
+const lastTimesTamp = $.read('journeyTimesTamp');
+(async () => {
+  switch (path) {
+    case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
+      $.log(JSON.stringify(resBody));
+      //Script运行间隔不得超过1100毫秒，避免重复通知
+      if (resBody.status == 0 && timesTamp - lastTimesTamp > 1100) {
+        $.notify('Journey', '', 'Reconnect');
+        $.info('Reconnect');
+      }
+      break;
+    case '/WebObjects/GKInvitationService.woa/wa/relayInitiate':
+      $.log(JSON.stringify(resBody));
+      if (resBody['self-relay-ip']) {
+        $.notify('Journey', '', 'Start a new connection');
+        $.info('Start a new connection');
+      }
+      break;
+    case '/WebObjects/GKMatchmakerDispatcher.woa/wa/checkMatchStatus':
+      $.log(JSON.stringify(resBody));
+      //Script运行间隔不得超过1100毫秒，避免重复通知
+      if (!resBody['poll-delay-ms'] && timesTamp - lastTimesTamp > 1100) {
+        let playerId = resBody.matches[0]['player-id'];
+        if (!playerInfoMap.get(playerId)) {
+          $.write(playerId, 'journeyMatchPlayerId');
+        } else {
+          playerId = playerInfoMap.get(playerId);
+        }
+        $.notify('Journey', '', `Matched：${playerId}`);
+        $.info(`Mathed：${playerId}`);
+      }
+      break;
+    case '/WebObjects/GKFriendService.woa/wa/getFriendPlayerIds':
+      //获取玩家name和playerId键值对、当前匹配玩家name
+      let playerMatchId = $.read('journeyMatchPlayerId');
+      for (let playerInfo of resBody.results) {
+        let playerId = playerInfo['player-id'];
+        if (playerMatchId && playerId == playerMatchId) {
+          $.notify('Journey', '', `PlayerName：${playerInfo.alias}`);
+          $.info(`PlayerName：${playerInfo.alias}`);
+          $.write('', 'journeyMatchPlayerId');
+        }
+        if (!playerInfoMap.get(playerId)) {
+          playerInfoMap.set(playerId, playerInfo.alias);
+        }
+      }
+      $.write(JSON.stringify([...playerInfoMap]), 'journeyPlayerInfoMap');
+      //创建持久化玩家列表，方便下次取值
+      break;
+  }
+})()
+  .catch(e => $.error(e.message || e.error || e))
+  .finally(() => {
+    $.write(`${timesTamp}`, 'journeyTimesTamp');
+    $.log(timesTamp - lastTimesTamp);
+    $.done();
+  });
+
+
+//https://raw.githubusercontent.com/Peng-YM/QuanX/master/Tools/OpenAPI
+function ENV(){const e="function"==typeof require&&"undefined"!=typeof $jsbox;return{isQX:"undefined"!=typeof $task,isLoon:"undefined"!=typeof $loon,isSurge:"undefined"!=typeof $httpClient&&"undefined"!=typeof $utils,isBrowser:"undefined"!=typeof document,isNode:"function"==typeof require&&!e,isJSBox:e,isRequest:"undefined"!=typeof $request,isScriptable:"undefined"!=typeof importModule}}function HTTP(e={baseURL:""}){const{isQX:t,isLoon:s,isSurge:o,isScriptable:n,isNode:i,isBrowser:r}=ENV(),u=/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;const a={};return["GET","POST","PUT","DELETE","HEAD","OPTIONS","PATCH"].forEach(h=>a[h.toLowerCase()]=(a=>(function(a,h){h="string"==typeof h?{url:h}:h;const d=e.baseURL;d&&!u.test(h.url||"")&&(h.url=d?d+h.url:h.url),h.body&&h.headers&&!h.headers["Content-Type"]&&(h.headers["Content-Type"]="application/x-www-form-urlencoded");const l=(h={...e,...h}).timeout,c={onRequest:()=>{},onResponse:e=>e,onTimeout:()=>{},...h.events};let f,p;if(c.onRequest(a,h),t)f=$task.fetch({method:a,...h});else if(s||o||i)f=new Promise((e,t)=>{(i?require("request"):$httpClient)[a.toLowerCase()](h,(s,o,n)=>{s?t(s):e({statusCode:o.status||o.statusCode,headers:o.headers,body:n})})});else if(n){const e=new Request(h.url);e.method=a,e.headers=h.headers,e.body=h.body,f=new Promise((t,s)=>{e.loadString().then(s=>{t({statusCode:e.response.statusCode,headers:e.response.headers,body:s})}).catch(e=>s(e))})}else r&&(f=new Promise((e,t)=>{fetch(h.url,{method:a,headers:h.headers,body:h.body}).then(e=>e.json()).then(t=>e({statusCode:t.status,headers:t.headers,body:t.data})).catch(t)}));const y=l?new Promise((e,t)=>{p=setTimeout(()=>(c.onTimeout(),t(`${a} URL: ${h.url} exceeds the timeout ${l} ms`)),l)}):null;return(y?Promise.race([y,f]).then(e=>(clearTimeout(p),e)):f).then(e=>c.onResponse(e))})(h,a))),a}function API(e="untitled",t=!1){const{isQX:s,isLoon:o,isSurge:n,isNode:i,isJSBox:r,isScriptable:u}=ENV();return new class{constructor(e,t){this.name=e,this.debug=t,this.http=HTTP(),this.env=ENV(),this.node=(()=>{if(i){return{fs:require("fs")}}return null})(),this.initCache();Promise.prototype.delay=function(e){return this.then(function(t){return((e,t)=>new Promise(function(s){setTimeout(s.bind(null,t),e)}))(e,t)})}}initCache(){if(s&&(this.cache=JSON.parse($prefs.valueForKey(this.name)||"{}")),(o||n)&&(this.cache=JSON.parse($persistentStore.read(this.name)||"{}")),i){let e="root.json";this.node.fs.existsSync(e)||this.node.fs.writeFileSync(e,JSON.stringify({}),{flag:"wx"},e=>console.log(e)),this.root={},e=`${this.name}.json`,this.node.fs.existsSync(e)?this.cache=JSON.parse(this.node.fs.readFileSync(`${this.name}.json`)):(this.node.fs.writeFileSync(e,JSON.stringify({}),{flag:"wx"},e=>console.log(e)),this.cache={})}}persistCache(){const e=JSON.stringify(this.cache,null,2);s&&$prefs.setValueForKey(e,this.name),(o||n)&&$persistentStore.write(e,this.name),i&&(this.node.fs.writeFileSync(`${this.name}.json`,e,{flag:"w"},e=>console.log(e)),this.node.fs.writeFileSync("root.json",JSON.stringify(this.root,null,2),{flag:"w"},e=>console.log(e)))}write(e,t){if(this.log(`SET ${t}`),-1!==t.indexOf("#")){if(t=t.substr(1),n||o)return $persistentStore.write(e,t);if(s)return $prefs.setValueForKey(e,t);i&&(this.root[t]=e)}else this.cache[t]=e;this.persistCache()}read(e){return this.log(`READ ${e}`),-1===e.indexOf("#")?this.cache[e]:(e=e.substr(1),n||o?$persistentStore.read(e):s?$prefs.valueForKey(e):i?this.root[e]:void 0)}delete(e){if(this.log(`DELETE ${e}`),-1!==e.indexOf("#")){if(e=e.substr(1),n||o)return $persistentStore.write(null,e);if(s)return $prefs.removeValueForKey(e);i&&delete this.root[e]}else delete this.cache[e];this.persistCache()}notify(e,t="",a="",h={}){const d=h["open-url"],l=h["media-url"];if(s&&$notify(e,t,a,h),n&&$notification.post(e,t,a+`${l?"\n多媒体:"+l:""}`,{url:d}),o){let s={};d&&(s.openUrl=d),l&&(s.mediaUrl=l),"{}"===JSON.stringify(s)?$notification.post(e,t,a):$notification.post(e,t,a,s)}if(i||u){const s=a+(d?`\n点击跳转: ${d}`:"")+(l?`\n多媒体: ${l}`:"");if(r){require("push").schedule({title:e,body:(t?t+"\n":"")+s})}else console.log(`${e}\n${t}\n${s}\n\n`)}}log(e){this.debug&&console.log(`[${this.name}] LOG: ${this.stringify(e)}`)}info(e){console.log(`[${this.name}] INFO: ${this.stringify(e)}`)}error(e){console.log(`[${this.name}] ERROR: ${this.stringify(e)}`)}wait(e){return new Promise(t=>setTimeout(t,e))}done(e={}){s||o||n?$done(e):i&&!r&&"undefined"!=typeof $context&&($context.headers=e.headers,$context.statusCode=e.statusCode,$context.body=e.body)}stringify(e){if("string"==typeof e||e instanceof String)return e;try{return JSON.stringify(e,null,2)}catch(e){return"[object Object]"}}}(e,t)}
