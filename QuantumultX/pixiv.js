@@ -1,32 +1,25 @@
 const $ = API("Pixiv", false);
 const url = $request.url;
 const path = $request.path;
-if (path.indexOf("/v1/search/illust") != -1) {
-  let modifiedHeaders = $request.headers;
-  let modifiedPath = path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
-  console.log(modifiedPath);
-  $.done({path : modifiedPath , headers : modifiedHeaders});
-}
-const body = JSON.parse($response.body);
+ if (path.indexOf("/v1/search/illust") != -1) {
+   let modifiedHeaders = $request.headers;
+   let modifiedPath = path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
+   console.log(modifiedPath);
+   $.done({path : modifiedPath , headers : modifiedHeaders});
+  }
+let body = $response.body;
 
-  if (path.indexOf("/v1/user/detail") != -1) {
-    body.profile['is_premium'] = true;
-  }
-  if (path.indexOf("auth/token") != -1) {
-      body.user['is_premium'] = true;
-      body.response.user['is_premium'] = true;
-  }
   if (url.indexOf("www.pixiv.net")) {
   if (path.indexOf("/touch/ajax/user/self/status") != -1) {
+    body = JSON.parse(body);
         body["show_ads"] = false;
         body["user_premium"] = 1;
         body["is_premium"] = true;
-  }
-  else if (path.indexOf("/touch/ajax_api/ajax_api\.php") != -1) {
-          body["user_data"]["user_premium"] = 1;
-  }
-  else {
-    body = $response.body
+  } else if (path.indexOf("/touch/ajax_api/ajax_api\.php") != -1) {
+    body = JSON.parse(body);
+    body["user_data"]["user_premium"] = 1;
+  } else {
+    body = body
     .replace(/"user_premium":"\d+/, '"user_premium":"1')
     .replace(/"is_premium":false/, '"is_premium":true')
     .replace(/"ads_disabled":false/, '"ads_disabled":true')
@@ -39,6 +32,16 @@ const body = JSON.parse($response.body);
     .replace(/"pixiv.config.ad":true/, '"pixiv.config.ad":false')
     .replace(/"pixiv.strings.nopremium":".*?"/, '');
     $.done({ body: body });
+  }
+} else {
+  if (path.indexOf("/v1/user/detail") != -1) {
+    body = JSON.parse(body);
+    body.profile['is_premium'] = true;
+  }
+  if (path.indexOf("auth/token") != -1) {
+    body = JSON.parse(body);
+    body.user['is_premium'] = true;
+    body.response.user['is_premium'] = true;
   }
 }
   $.done({ body: JSON.stringify(body) });
