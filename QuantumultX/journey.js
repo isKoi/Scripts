@@ -33,7 +33,7 @@ const lastTimesTamp = $.read('journeyTimesTamp');
   switch (path) {
     case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
       $.log(JSON.stringify(resBody));
-      //Script运行间隔不得超过1100毫秒，避免重复通知
+      //运行间隔不得超过1100毫秒，避免重复通知
       if (resBody.status == 0 && timesTamp - lastTimesTamp > 1100) {
         $.notify('Journey', '', 'Reconnect');
         $.info('Reconnect');
@@ -48,7 +48,7 @@ const lastTimesTamp = $.read('journeyTimesTamp');
       break;
     case '/WebObjects/GKMatchmakerDispatcher.woa/wa/checkMatchStatus':
       $.log(JSON.stringify(resBody));
-      //Script运行间隔不得超过1100毫秒，避免重复通知
+      //运行间隔不得超过1100毫秒，避免重复通知
       if (!resBody['poll-delay-ms'] && timesTamp - lastTimesTamp > 1100) {
         let playerId = resBody.matches[0]['player-id'];
         if (!playerInfoMap.get(playerId)) {
