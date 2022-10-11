@@ -7,44 +7,15 @@ const path = $request.path;
    console.log(modifiedPath);
    $.done({path : modifiedPath , headers : modifiedHeaders});
   }
-let body = $response.body;
+let body = JSON.parse($response.body);
 
-  if (url.indexOf("www.pixiv.net")) {
-  if (path.indexOf("/touch/ajax/user/self/status") != -1) {
-    body = JSON.parse(body);
-        body["show_ads"] = false;
-        body["user_premium"] = 1;
-        body["is_premium"] = true;
-  } else if (path.indexOf("/touch/ajax_api/ajax_api\.php") != -1) {
-    body = JSON.parse(body);
-    body["user_data"]["user_premium"] = 1;
-  } else {
-    body = body
-    .replace(/"user_premium":"\d+/, '"user_premium":"1')
-    .replace(/"is_premium":false/, '"is_premium":true')
-    .replace(/"ads_disabled":false/, '"ads_disabled":true')
-    .replace(/"show_ads":true/, '"show_ads":false')
-    .replace(/"premium":false/, '"premium":true')
-    .replace(
-      /"pixiv.context.enablePopularSearch":false/,
-      '"pixiv.context.enablePopularSearch":true'
-    )
-    .replace(/"pixiv.config.ad":true/, '"pixiv.config.ad":false')
-    .replace(/premium: 'no'/, "premium: 'yes'")
-    .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
-    $.done({ body: body });
-  }
-} else {
-  if (path.indexOf("/v1/user/detail") != -1) {
-    body = JSON.parse(body);
+ if (path.indexOf("/v1/user/detail") != -1) {
     body.profile['is_premium'] = true;
   }
   if (path.indexOf("auth/token") != -1) {
-    body = JSON.parse(body);
     body.user['is_premium'] = true;
     body.response.user['is_premium'] = true;
   }
-}
   $.done({ body: JSON.stringify(body) });
 
 
