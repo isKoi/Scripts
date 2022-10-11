@@ -1,26 +1,25 @@
-const $ = API("Pixiv", false);
+const $ = API('Pixiv', false);
 const url = $request.url;
 const path = $request.path;
- if (path.indexOf("/v1/search/illust") != -1) {
-   let modifiedHeaders = $request.headers;
-   let modifiedPath = path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
-   console.log(modifiedPath);
-   $.done({path : modifiedPath , headers : modifiedHeaders});
-  }
+if (path.indexOf('/v1/search/illust') != -1) {
+    let modifiedHeaders = $request.headers;
+    let modifiedPath = path.replace(
+        /search\/illust(.+)search_target=(partial|exact)/,
+        'search/popular-preview/illust$1search_target=exact'
+    );
+    console.log(modifiedPath);
+    $.done({ path: modifiedPath, headers: modifiedHeaders });
+}
 let body = JSON.parse($response.body);
 
- if (path.indexOf("/v1/user/detail") != -1) {
+if (path.indexOf('/v1/user/detail') != -1) {
     body.profile['is_premium'] = true;
-  }
-  if (path.indexOf("auth/token") != -1) {
+}
+if (path.indexOf('auth/token') != -1) {
     body.user['is_premium'] = true;
     body.response.user['is_premium'] = true;
-  }
-  $.done({ body: JSON.stringify(body) });
-
-
-
-
+}
+$.done({ body: JSON.stringify(body) });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //https://raw.githubusercontent.com/Peng-YM/QuanX/master/Tools/OpenAPI
