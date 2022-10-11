@@ -1,4 +1,5 @@
 const $ = API("Pixiv", false);
+const path = $request.path;
 if (path.indexOf("/v1/search/illust") != -1) {
   let modifiedHeaders = $request.headers;
   let modifiedPath = $request.path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
@@ -6,7 +7,6 @@ if (path.indexOf("/v1/search/illust") != -1) {
   $.done({path : modifiedPath , headers : modifiedHeaders});
 }
 const body = JSON.parse($response.body);
-const path = $request.path;
 
   if (path.indexOf("/v1/user/detail") != -1) {
     body.profile['is_premium'] = true;
