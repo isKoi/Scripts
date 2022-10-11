@@ -20,7 +20,7 @@ const body = JSON.parse($response.body);
   if (path.indexOf("/touch/ajax/user/self/status") != -1) {
         body["show_ads"] = false;
         body["user_premium"] = 1;
-        body["is_premium"] = ture;
+        body["is_premium"] = true;
   }
   else if (path.indexOf("/touch/ajax_api/ajax_api\.php") != -1) {
           body["user_data"]["user_premium"] = 1;
