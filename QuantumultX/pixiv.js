@@ -30,7 +30,8 @@ let body = $response.body;
       '"pixiv.context.enablePopularSearch":true'
     )
     .replace(/"pixiv.config.ad":true/, '"pixiv.config.ad":false')
-    .replace(/"pixiv.strings.nopremium":".*?"/, '');
+    .replace(/premium: 'no'/, "premium: 'yes'")
+    .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
     $.done({ body: body });
   }
 } else {
