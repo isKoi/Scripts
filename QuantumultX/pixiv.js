@@ -1,5 +1,4 @@
 const $ = API('Pixiv', false);
-const url = $request.url;
 const path = $request.path;
 if (path.indexOf('/v1/search/illust') != -1) {
     let modifiedHeaders = $request.headers;
