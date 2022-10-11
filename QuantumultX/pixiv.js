@@ -1,4 +1,5 @@
 const $ = API("Pixiv", false);
+const url = $request.url;
 const path = $request.path;
 if (path.indexOf("/v1/search/illust") != -1) {
   let modifiedHeaders = $request.headers;
@@ -15,15 +16,16 @@ const body = JSON.parse($response.body);
       body.user['is_premium'] = true;
       body.response.user['is_premium'] = true;
   }
+  if (url.indexOf("www.pixiv.net")) {
   if (path.indexOf("/touch/ajax/user/self/status") != -1) {
         body["show_ads"] = false;
         body["user_premium"] = 1;
         body["is_premium"] = ture;
   }
-  if (path.indexOf("/touch/ajax_api/ajax_api\.php") != -1) {
+  else if (path.indexOf("/touch/ajax_api/ajax_api\.php") != -1) {
           body["user_data"]["user_premium"] = 1;
   }
-  if (path.indexOf("php?mode=r18") != -1) {
+  else {
     body = $response.body
     .replace(/"user_premium":"\d+/, '"user_premium":"1')
     .replace(/"is_premium":false/, '"is_premium":true')
@@ -38,6 +40,7 @@ const body = JSON.parse($response.body);
     .replace(/"pixiv.strings.nopremium":".*?"/, '');
     $.done({ body: body });
   }
+}
   $.done({ body: JSON.stringify(body) });
 
 
