@@ -1,4 +1,10 @@
 const $ = API("Pixiv", false);
+if (path.indexOf("/v1/search/illust") != -1) {
+  let modifiedHeaders = $request.headers;
+  let modifiedPath = $request.path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
+  console.log(modifiedPath);
+  $.done({path : modifiedPath , headers : modifiedHeaders});
+}
 const body = JSON.parse($response.body);
 const path = $request.path;
 
@@ -31,12 +37,6 @@ const path = $request.path;
     .replace(/"pixiv.config.ad":true/, '"pixiv.config.ad":false')
     .replace(/"pixiv.strings.nopremium":".*?"/, '');
     $.done({ body: body });
-  }
-  if (path.indexOf("/v1/search/illust") != -1) {
-    let modifiedHeaders = $request.headers;
-    let modifiedPath = $request.path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
-    console.log(modifiedPath);
-    $.done({path : modifiedPath , headers : modifiedHeaders});
   }
   $.done({ body: JSON.stringify(body) });
 
