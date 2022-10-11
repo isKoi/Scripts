@@ -2,7 +2,7 @@ const $ = API("Pixiv", false);
 const path = $request.path;
 if (path.indexOf("/v1/search/illust") != -1) {
   let modifiedHeaders = $request.headers;
-  let modifiedPath = $request.path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
+  let modifiedPath = path.replace(/search\/illust(.+)search_target=(partial|exact)/,"search/popular-preview/illust$1search_target=exact");
   console.log(modifiedPath);
   $.done({path : modifiedPath , headers : modifiedHeaders});
 }

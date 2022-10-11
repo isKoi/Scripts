@@ -22,7 +22,7 @@ let PlistParser = (function(){
 })();
 
 ////////////////////////////////////////////////
-const $ = API('Journey', true);
+const $ = API('Journey', false);
 let resBody = PlistParser.parse($response.body);
 const path = $request.path;
 let playerInfoMap = $.read('journeyPlayerInfoMap');
