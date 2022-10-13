@@ -1,5 +1,7 @@
 const $ = API('Pixiv', false);
 const path = $request.path;
+let body = $response ?  JSON.parse($response.body) : null;
+
 if (path.indexOf('/v1/search/illust') != -1) {
     let modifiedHeaders = $request.headers;
     let modifiedPath = path.replace(
@@ -9,7 +11,6 @@ if (path.indexOf('/v1/search/illust') != -1) {
     console.log(modifiedPath);
     $.done({ path: modifiedPath, headers: modifiedHeaders });
 }
-let body = JSON.parse($response.body);
 
 if (path.indexOf('/v1/user/detail') != -1) {
     body.profile['is_premium'] = true;
