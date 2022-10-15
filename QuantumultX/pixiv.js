@@ -2,7 +2,7 @@ const $ = API('Pixiv', false);
 
 (() => {
     let path = $request.path;
-    path = path.slice(0, !path.indexOf('?') ? path.indexOf('?') : path.length);
+    path = path.slice(0, (path.indexOf('?') ? true : false) ? path.length : path.indexOf("?"));
     let obj = $response ? JSON.parse($response.body) : null;
     switch (path) {
         case '/auth/token':
@@ -18,7 +18,7 @@ const $ = API('Pixiv', false);
             obj['show_ads'] = false;
             obj['user_premium'] = 1;
             break;
-        case '/touch/ajax_api/ajax_api.php':
+        case '/touch/ajax_api/ajax_api.php': 
             obj['user_data']['user_premium'] = 1;
             break;
         case '/v1/search/illust':
