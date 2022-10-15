@@ -12,7 +12,7 @@ const $ = API('Pixiv', false);
             obj['profile']['is_premium'] = true;
             break;
         case /\/touch\/ajax\/user\/self\/status/.test(url):
-            obj = obj['boby']['user_status'];
+            obj = obj['body']['user_status'];
             obj['ads_disabled'] = true;
             obj['show_ads'] = false;
             obj['user_premium'] = 1;
@@ -32,7 +32,7 @@ const $ = API('Pixiv', false);
             break;
     }
     let body = JSON.stringify(obj);
-    $.log(body);
+    $.log(obj);
     $.done({ body: body });
 })();
 
