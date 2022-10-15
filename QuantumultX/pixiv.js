@@ -15,10 +15,10 @@ const $ = API('Pixiv', false);
             obj = obj['body']['user_status'];
             obj['ads_disabled'] = true;
             obj['show_ads'] = false;
-            obj['user_premium'] = 1;
+            obj['user_premium'] = '1';
             break;
         case /\/touch\/ajax_api\/ajax_api\.php/.test(url):
-            obj['user_data']['user_premium'] = 1;
+            obj['user_data']['user_premium'] = '1';
             break;
         case /\/v1\/search\/illust/.test(url):
             let headers = $request.headers;
