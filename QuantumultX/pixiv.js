@@ -34,7 +34,9 @@ const $ = API('Pixiv', false);
             body = $response.body;
             body.replace(/"premium":false/, '"premium":true')
                 .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
-                .replace(/premium: 'no'/, "premium: 'yes'");
+                .replace(/premium: 'no'/, "premium: 'yes'")
+                .replace(/"pixiv.context.enabledPopularSearch":false/, '"pixiv.context.enabledPopularSearch":true')
+                .replace(/"touch_premium_popular_search_modal":true,"www_premium_link_text":true/, '"touch_premium_popular_search_modal":false,"www_premium_link_text":false');
             break;
     }
     let body = JSON.stringify(obj);
