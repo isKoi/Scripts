@@ -2,7 +2,11 @@ const $ = API('Pixiv', false);
 
 (() => {
     const url = $request.url;
-    let obj = $response ? JSON.parse($response.body) : null;
+    let obj = $response
+        ? JSON.parse($response.body)
+            ? JSON.parse($response.body)
+            : $response.body
+        : null;
     switch (true) {
         case /\/auth\/token/.test(url):
             obj['user']['is_premium'] = true;
@@ -35,8 +39,14 @@ const $ = API('Pixiv', false);
             body.replace(/"premium":false/, '"premium":true')
                 .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
                 .replace(/premium: 'no'/, "premium: 'yes'")
-                .replace(/"pixiv.context.enabledPopularSearch":false/, '"pixiv.context.enabledPopularSearch":true')
-                .replace(/"touch_premium_popular_search_modal":true,"www_premium_link_text":true/, '"touch_premium_popular_search_modal":false,"www_premium_link_text":false');
+                .replace(
+                    /"pixiv.context.enabledPopularSearch":false/,
+                    '"pixiv.context.enabledPopularSearch":true'
+                )
+                .replace(
+                    /"touch_premium_popular_search_modal":true,"www_premium_link_text":true/,
+                    '"touch_premium_popular_search_modal":false,"www_premium_link_text":false'
+                );
             break;
     }
     let body = JSON.stringify(obj);
