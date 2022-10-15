@@ -36,7 +36,7 @@ const $ = API('Pixiv', false);
     .finally(() => {
       let body = JSON.stringify(obj);
       $.log(body);
-      $.done({ body: obj });
+      $.done({ body: body });
     });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
