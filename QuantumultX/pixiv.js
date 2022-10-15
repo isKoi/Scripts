@@ -30,6 +30,7 @@ switch (path) {
         $.done({ path: modifiedPath, headers: modifiedHeaders });
         break;
 }
+$.done({ body: JSON.stringify(body) });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //https://raw.githubusercontent.com/Peng-YM/QuanX/master/Tools/OpenAPI
