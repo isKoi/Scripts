@@ -31,18 +31,19 @@ const $ = API('Pixiv', false);
             $.done({ path: path, headers: headers });
             break;
         case /www\.pixiv\.net\/?$/.test(url):
-            body = $response.body;
-            body.replace(/"premium":false/, '"premium":true')
+            obj = $response.body;
+            obj.replace(/"premium":false/, '"premium":true')
                 .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
                 .replace(/premium: 'no'/, "premium: 'yes'")
                 .replace(
-                    /"pixiv.context.enabledPopularSearch":false/,
-                    '"pixiv.context.enabledPopularSearch":true'
+                    /"pixiv\.context\.enablePopularSearch":false/,
+                    '"pixiv.context.enablePopularSearch":true'
                 )
                 .replace(
-                    /"touch_premium_popular_search_modal":true,"www_premium_link_text":true/,
-                    '"touch_premium_popular_search_modal":false,"www_premium_link_text":false'
-                );
+                    /"touch_premium_popular_search_modal":true/,
+                    '"touch_premium_popular_search_modal":false'
+                )
+                .replace(/"www_premium_link_text":true/, '"www_premium_link_text":false');
             break;
     }
     let body = JSON.stringify(obj);
