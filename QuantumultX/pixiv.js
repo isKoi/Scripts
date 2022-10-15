@@ -36,10 +36,6 @@ const $ = API('Pixiv', false);
                 .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
                 .replace(/premium: 'no'/, "premium: 'yes'")
                 .replace(
-                    /"pixiv\.context\.enablePopularSearch":false/,
-                    '"pixiv.context.enablePopularSearch":true'
-                )
-                .replace(
                     /"touch_premium_popular_search_modal":true/,
                     '"touch_premium_popular_search_modal":false'
                 )
