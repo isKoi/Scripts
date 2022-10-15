@@ -2,11 +2,7 @@ const $ = API('Pixiv', false);
 
 (() => {
     const url = $request.url;
-    let obj = $response
-        ? JSON.parse($response.body)
-            ? JSON.parse($response.body)
-            : $response.body
-        : null;
+    let obj = $response && !/www\.pixiv\.net\/?$/.test(url) ? JSON.parse($response.body) : null;
     switch (true) {
         case /\/auth\/token/.test(url):
             obj['user']['is_premium'] = true;
