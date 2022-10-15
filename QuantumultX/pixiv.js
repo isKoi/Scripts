@@ -1,31 +1,25 @@
 const $ = API('Pixiv', false);
 
-(async () => {
+(() => {
     let path = $request.path;
     path = path.slice(0, !path.indexOf('?') ? path.indexOf('?') : path.length);
-    $.log(path);
-    let body = null;
     let obj = $response ? JSON.parse($response.body) : null;
     switch (path) {
         case '/auth/token':
             obj['user']['is_premium'] = true;
             obj['response']['user']['is_premium'] = true;
-            body = JSON.stringify(obj);
             break;
         case '/v1/user/detail':
             obj['profile']['is_premium'] = true;
-            body = JSON.stringify(obj);
             break;
         case '/touch/ajax/user/self/status':
             obj = obj['boby']['user_status'];
             obj['ads_disabled'] = true;
             obj['show_ads'] = false;
             obj['user_premium'] = 1;
-            body = JSON.stringify(obj);
             break;
         case '/touch/ajax_api/ajax_api.php':
             obj['user_data']['user_premium'] = 1;
-            body = JSON.stringify(obj);
             break;
         case '/v1/search/illust':
             let modifiedHeaders = $request.headers;
@@ -37,12 +31,10 @@ const $ = API('Pixiv', false);
             $.done({ path: modifiedPath, headers: modifiedHeaders });
             break;
     }
-})()
-    .catch((e) => $.error(e.message || e.error || e))
-    .finally(() => {
-        $.log(body);
-        $.done({ body: body });
-    });
+})();
+let body = JSON.stringify(obj);
+$.log(body);
+$.done({ body: body });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //https://raw.githubusercontent.com/Peng-YM/QuanX/master/Tools/OpenAPI
