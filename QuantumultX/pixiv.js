@@ -1,34 +1,34 @@
 const $ = API('Pixiv', false);
 
 (() => {
-    let path = $request.path;
-    path = path.slice(0, (path.indexOf('?') ? true : false) ? path.length : path.indexOf("?"));
+    const url = $request.url;
     let obj = $response ? JSON.parse($response.body) : null;
-    switch (path) {
-        case '/auth/token':
+    switch (true) {
+        case /\/auth\/token/.test(url):
             obj['user']['is_premium'] = true;
             obj['response']['user']['is_premium'] = true;
             break;
-        case '/v1/user/detail':
+        case /\/v1\/user\/detail/.test(url):
             obj['profile']['is_premium'] = true;
             break;
-        case '/touch/ajax/user/self/status':
+        case /\/touch\/ajax\/user\/self\/status/.test(url):
             obj = obj['boby']['user_status'];
             obj['ads_disabled'] = true;
             obj['show_ads'] = false;
             obj['user_premium'] = 1;
             break;
-        case '/touch/ajax_api/ajax_api.php': 
+        case /\/touch\/ajax_api\/ajax_api\.php/.test(url):
             obj['user_data']['user_premium'] = 1;
             break;
-        case '/v1/search/illust':
-            let modifiedHeaders = $request.headers;
-            let modifiedPath = path.replace(
+        case /\/v1\/search\/illust/.test(url):
+            let headers = $request.headers;
+            let path = $request.path;
+            path = path.replace(
                 /search\/illust(.+)search_target=(partial|exact)/,
                 'search/popular-preview/illust$1search_target=exact'
             );
-            $.log(modifiedPath);
-            $.done({ path: modifiedPath, headers: modifiedHeaders });
+            $.log(path);
+            $.done({ path: path, headers: headers });
             break;
     }
     let body = JSON.stringify(obj);
