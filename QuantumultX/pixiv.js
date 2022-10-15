@@ -30,6 +30,12 @@ const $ = API('Pixiv', false);
             $.log(path);
             $.done({ path: path, headers: headers });
             break;
+        case /www\.pixiv\.net\/?$/.test(url):
+            body = $response.body;
+            body.replace(/"premium":false/, '"premium":true')
+                .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
+                .replace(/premium: 'no'/, "premium: 'yes'");
+            break;
     }
     let body = JSON.stringify(obj);
     $.log(obj);
