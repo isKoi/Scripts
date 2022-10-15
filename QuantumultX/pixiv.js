@@ -1,31 +1,31 @@
-const $ = API("Pixiv", false);
+const $ = API('Pixiv', false);
 
-(() => {
+(async () => {
     let path = $request.path;
-    path = path.slice(0, !path.indexOf("?") ? path.indexOf("?") : path.length);
+    path = path.slice(0, !path.indexOf('?') ? path.indexOf('?') : path.length);
     let obj = $response ? JSON.parse($response.body) : null;
     switch (path) {
-        case "auth/token":
-            obj["user"]["is_premium"] = true;
-            obj["response"]["user"]["is_premium"] = true;
+        case 'auth/token':
+            obj['user']['is_premium'] = true;
+            obj['response']['user']['is_premium'] = true;
             break;
-        case "/v1/user/detail":
-            obj["profile"]["is_premium"] = true;
+        case '/v1/user/detail':
+            obj['profile']['is_premium'] = true;
             break;
-        case "/touch/ajax/user/self/status":
-            obj = obj["boby"]["user_status"];
-            obj["ads_disabled"] = true;
-            obj["show_ads"] = false;
-            obj["user_premium"] = 1;
+        case '/touch/ajax/user/self/status':
+            obj = obj['boby']['user_status'];
+            obj['ads_disabled'] = true;
+            obj['show_ads'] = false;
+            obj['user_premium'] = 1;
             break;
-        case "/touch/ajax_api/ajax_api.php":
-            obj["user_data"]["user_premium"] = 1;
+        case '/touch/ajax_api/ajax_api.php':
+            obj['user_data']['user_premium'] = 1;
             break;
-        case "/v1/search/illust":
+        case '/v1/search/illust':
             let modifiedHeaders = $request.headers;
             let modifiedPath = path.replace(
                 /search\/illust(.+)search_target=(partial|exact)/,
-                "search/popular-preview/illust$1search_target=exact"
+                'search/popular-preview/illust$1search_target=exact'
             );
             $.log(modifiedPath);
             $.done({ path: modifiedPath, headers: modifiedHeaders });
@@ -34,9 +34,9 @@ const $ = API("Pixiv", false);
 })()
     .catch((e) => $.error(e.message || e.error || e))
     .finally(() => {
-      let body = JSON.stringify(obj);
-      $.log(body);
-      $.done({ body: body });
+        let body = JSON.stringify(obj);
+        $.log(body);
+        $.done({ body: body });
     });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

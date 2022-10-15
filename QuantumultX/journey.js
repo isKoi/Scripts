@@ -14,13 +14,13 @@ let PlistParser = (function(){
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 const $ = API('Journey', false);
-let resBody = PlistParser.parse($response.body);
+const resBody = PlistParser.parse($response.body);
 const path = $request.path;
 let playerInfoMap = $.read('journeyPlayerInfoMap');
 playerInfoMap = playerInfoMap ? new Map(JSON.parse(playerInfoMap)) : new Map();
 const timesTamp = new Date().getTime();
 const lastTimesTamp = $.read('journeyTimesTamp');
-(() => {
+(async () => {
   switch (path) {
     case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
       $.log(JSON.stringify(resBody));
