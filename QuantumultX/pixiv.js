@@ -31,10 +31,10 @@ const $ = API('Pixiv', false);
             $.done({ path: modifiedPath, headers: modifiedHeaders });
             break;
     }
+    let body = JSON.stringify(obj);
+    $.log(body);
+    $.done({ body: body });
 })();
-let body = JSON.stringify(obj);
-$.log(body);
-$.done({ body: body });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //https://raw.githubusercontent.com/Peng-YM/QuanX/master/Tools/OpenAPI
