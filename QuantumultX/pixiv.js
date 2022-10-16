@@ -31,9 +31,8 @@ const $ = API('Pixiv', false);
             $.done({ path: path, headers: headers });
             break;
         case /www\.pixiv\.net\/?$/.test(url):
-            obj = $response.body;
-            obj = obj.replace(/"premium":false/, '"premium":true')
-                .replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
+            let body = $response.body;
+            body = obj.replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
                 .replace(/premium: 'no'/, "premium: 'yes'")
                 .replace(
                   /"pixiv.context.enabledPopularSearch":false/,
@@ -44,6 +43,7 @@ const $ = API('Pixiv', false);
                     '"touch_premium_popular_search_modal":false'
                 )
                 .replace(/"www_premium_link_text":true/, '"www_premium_link_text":false');
+                $.done({ body: body });
             break;
     }
     let body = JSON.stringify(obj);
