@@ -32,7 +32,7 @@ const $ = API('Pixiv', false);
             break;
         case /www\.pixiv\.net\/?$/.test(url):
             let body = $response.body;
-            body = obj.replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
+            body = body.replace(/"qualtrics_is-premium" hidden>no/, '"qualtrics_is-premium" hidden>yes')
                 .replace(/premium: 'no'/, "premium: 'yes'")
                 .replace(
                   /"pixiv.context.enabledPopularSearch":false/,
