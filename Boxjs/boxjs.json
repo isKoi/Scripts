@@ -7,7 +7,7 @@
   "repo": "https://github.com/qianli-Koi/Scripts",
   "apps": [
     {
-      "id": "NetflixPolicySwitcher(Koi version)",
+      "id": "NetflixPolicySwitcher(KoiVersion)",
       "name": "Netflix 策略组切换",
       "keys": [
         "Helge_0x00.Netflix_Full_Available_Policies",
@@ -90,7 +90,7 @@
           "script": "https://raw.githubusercontent.com/Hyseen/Scripts/master/QuantumultX/NetflixPolicySwitcher/netflix_switcher.js"
         }
       ],
-      "author": "@Helge_0x00",
+      "author": "@Koi",
       "repo": "https://github.com/qianli-Koi/PolicySwitcher",
       "icons": [
         "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Netflix_Letter.png",
