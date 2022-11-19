@@ -31,11 +31,11 @@
           "desc": "Debug 模式, 用于调试脚本"
         },
         {
-          "id": " Netflix_Notify",
+          "id": "Netflix_Notify",
           "name": "关闭脚本通知",
           "val": false,
           "type": "boolean",
-          "desc": "关闭脚本通知"
+          "desc": "关闭切换策略通知"
         },
         {
           "id": "Helge_0x00.Netflix_Retry",
