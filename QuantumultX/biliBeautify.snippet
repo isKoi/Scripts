@@ -1,2 +1,12 @@
 ^https?:\/\/app\.bilibili\.com\/x\/(v2|resource)\/(account|show)(\/|\?)(mine|myinfo|skin|tab)(\/v2|\?)?.* url script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/biliBeautify.js
-hostname = app.bilibili.com
+^https?:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v\d\/ecommerce-user\/get_shopping_info\? url reject-dict
+^https?:\/\/api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive url reject-dict
+^https?:\/\/app\.bilibili\.com\/x\/resource\/ip url reject
+^https?:\/\/app\.bilibili\.com\/bilibili\.app\.interface\.v1\.Search\/Default url reject
+^https://app.bilibili.com/x/v2/splash/show url reject-dict
+^https://app.bilibili.com/x/v2/search/defaultwords url reject-dict
+^https?:\/\/api\.bilibili\.com\/x\/vip\/ads\/material\/report url reject-dict
+^https://api.bilibili.com/pgc/season/player/cards url reject-dict
+^https?:\/\/api\.vc\.bilibili\.com\/topic_svr\/v1\/topic_svr url reject-dict
+^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/(Flash|ListFlash) url reject-dict
+hostname = app.bilibili.com,api.live.bilibili.com,api.vc.bilibili.com, api.bilibili.com, manga.bilibili.com, grpc.biliapi.net,api.biliapi.net, -broadcast.chat.bilibili.com, -*cdn*.biliapi.net, -*tracker*.biliapi.net
