@@ -20,7 +20,7 @@ let playerInfoMap = $.read('journeyPlayerInfoMap');
 playerInfoMap = playerInfoMap ? new Map(JSON.parse(playerInfoMap)) : new Map();
 const timesTamp = new Date().getTime();
 const lastTimesTamp = $.read('journeyTimesTamp');
-(async () => {
+!(async () => {
   switch (path) {
     case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
       $.log(JSON.stringify(resBody));
@@ -77,7 +77,6 @@ const lastTimesTamp = $.read('journeyTimesTamp');
     $.done();
   });
 
-/////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * OpenAPI
  * @author: Peng-YM
