@@ -47,11 +47,10 @@ const $ = API('Pixiv', false);
             $.done({ body: body });
             break;
     }
-})().then(() => {
-  let body = JSON.stringify(obj);
-  $.log(obj);
-  $.done({ body: body });
-})
+    obj = JSON.stringify(obj);
+    $.log(obj);
+    $.done({ body: obj });
+})();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
