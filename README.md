@@ -11,7 +11,7 @@ Scripts for QuantumultX,JSBox,NodeJs
 | [哔哩哔哩美化](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/biliBeautify) | 皮肤/NoAds |
 | [Bika](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Bika.snippet) | NoAds |
 | [Iwara](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/iwara.snippet) | 去除弹窗/NoAds |
-| [Reimu](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/reimu.snippet | 自动输入封印密码/显示隐藏内容 |
+| [Reimu](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/reimu.snippet) | 自动输入封印密码/显示隐藏内容 |
 
 ## JSBox
 🚧 🚧 🚧 🚧
