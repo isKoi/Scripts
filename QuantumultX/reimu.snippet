@@ -1,3 +1,3 @@
-^https://blog.reimu.net/$|^https://blog.reimu.net/archives/\d+$ url response-body <pre>([\s\S]*?)</pre> response-body <Koi>$1</Koi>
+^https://blog.reimu.net/$|^https://blog.reimu.net/archives/\d+$ url response-body <pre>([\s\S]*?)</pre> response-body <h3>$1</h3>
 https://blog.reimu.net\/\?password-protected=login&redirect_to= url 302 https://blog.reimu.net/?password-protected=login&password_protected_pwd=%E2%91%A8&wp-submit=%E7%99%BB%E5%BD%95&password_protected_cookie_test=1&password-protected=login&redirect_to=
 hostname=blog.reimu.net
