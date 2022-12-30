@@ -8,3 +8,9 @@ Scripts for QuantumultX,JSBox,NodeJs
 | :----------------------------------------------------------: | :-----------------------------: |
 | [Journey](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Journey) | 匹配/链接友人通知，显示友人名字 |
 | [Pixiv](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Pixiv) | 解锁Premium/热门前30预览 |
+
+##JSBox
+🚧 🚧 🚧 🚧
+
+##NodeJs
+🚧 🚧 🚧 🚧
