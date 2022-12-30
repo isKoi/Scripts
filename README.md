@@ -6,7 +6,7 @@ Scripts for QuantumultX,JSBox,NodeJs
 
 |                             脚本                             |              作用               |
 | :----------------------------------------------------------: | :-----------------------------: |
-| [Journey](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Journey) | 匹配/连接友人通知，显示友人名称 |
+| [风之旅人](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Journey) | 匹配/连接友人通知，显示友人名称 |
 | [Pixiv](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Pixiv) | 解锁Premium/热门前30预览 |
 | [哔哩哔哩美化](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/biliBeautify) | 皮肤/NoAds/1080+ |
 | [Bika](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Bika.snippet) | NoAds |
