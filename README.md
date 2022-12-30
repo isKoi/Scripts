@@ -8,7 +8,7 @@ Scripts for QuantumultX,JSBox,NodeJs
 | :----------------------------------------------------------: | :-----------------------------: |
 | [Journey](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Journey) | 匹配/连接友人通知，显示友人名字 |
 | [Pixiv](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Pixiv) | 解锁Premium/热门前30预览 |
-| [哔哩哔哩美化](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/biliBeautify) | 皮肤/NoAds |
+| [哔哩哔哩美化](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/biliBeautify) | 皮肤/NoAds/1080+ |
 | [Bika](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/Bika.snippet) | NoAds |
 | [Iwara](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/iwara.snippet) | 去除弹窗/NoAds |
 | [Reimu](https://github.com/qianli-Koi/Scripts/tree/master/QuantumultX/reimu.snippet) | 自动输入封印密码/显示隐藏内容 |
