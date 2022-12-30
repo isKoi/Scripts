@@ -6,8 +6,8 @@
 
 * [远程订阅(推荐)](https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.snippet)
 
-* 本地配置
 ```properties
+# 本地配置
 [rewrite_local]
 ^https:\/\/invitation\.gc\.apple\.com\/WebObjects\/GKInvitationService\.woa\/wa\/(relayInitiate|relayUpdate) url script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
 ^https:\/\/match\.gc\.apple\.com\/WebObjects\/GKMatchmakerDispatcher\.woa\/wa\/checkMatchStatus url script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
