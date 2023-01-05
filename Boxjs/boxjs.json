@@ -103,6 +103,27 @@
         "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Netflix_Letter.png",
         "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix_Letter.png"
       ]
+    },
+    {
+      "id": "Journey",
+      "name": "Journey",
+      "keys":[
+        "journeyPlayerInfoMap"
+      ],
+      "settings": [
+        {
+          "id": "Journey_debug",
+          "name": "Debug 模式",
+          "val": false,
+          "type": "boolean",
+          "desc": "Debug 模式, 用于调试脚本"
+        }
+      ],
+      "author": "@Koi",
+      "repo": "https://github.com/qianli-Koi/scripts",
+      "icons": [
+        "https://raw.githubusercontent.com/qianli-Koi/Scripts/master/Boxjs/Journey.jpeg"
+      ]
     }
   ],
   "task": [
