@@ -13,7 +13,7 @@ let PlistParser = (function(){
 })();
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-const debug = $.read('Journey_debug');
+const debug = $prefs.valueForKey('Journey_debug');
 const $ = API('Journey', debug);
 const resBody = PlistParser.parse($response.body);
 const path = $request.path;
