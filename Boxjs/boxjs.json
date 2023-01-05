@@ -107,7 +107,7 @@
     {
       "id": "Journey",
       "name": "Journey",
-      "keys":[
+      "keys": [
         "journeyPlayerInfoMap"
       ],
       "settings": [
@@ -122,6 +122,7 @@
       "author": "@Koi",
       "repo": "https://github.com/qianli-Koi/scripts",
       "icons": [
+        "https://raw.githubusercontent.com/qianli-Koi/Scripts/master/Boxjs/Journey.jpeg",
         "https://raw.githubusercontent.com/qianli-Koi/Scripts/master/Boxjs/Journey.jpeg"
       ]
     }
