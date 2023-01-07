@@ -1,4 +1,4 @@
-(function () {var PlistParser={};PlistParser.parse=function(plist_xml){try{if(typeof Titanium.XML!='undefined'){plist_xml=Titanium.XML.parseString(plist_xml);}}catch(e){var parser=new DOMParser();plist_xml=parser.parseFromString(plist_xml,'text/xml');}
+(function(){var PlistParser={};PlistParser.parse=function(plist_xml){try{if(typeof Titanium.XML!='undefined'){plist_xml=Titanium.XML.parseString(plist_xml);}}catch(e){var parser=new DOMParser();plist_xml=parser.parseFromString(plist_xml,'text/xml');}
 var result=this._xml_to_json(plist_xml.getElementsByTagName('plist').item(0));return result;};PlistParser._xml_to_json=function(xml_node){var parser=this;var parent_node=xml_node;var parent_node_name=parent_node.nodeName;var child_nodes=[];for(var i=0;i<parent_node.childNodes.length;++i){var child=parent_node.childNodes.item(i);if(child.nodeName!='#text'){child_nodes.push(child);};};switch(parent_node_name){case'plist':if(child_nodes.length>1){var plist_array=[];for(var i=0;i<child_nodes.length;++i){plist_array.push(parser._xml_to_json(child_nodes[i]));};return plist_array;}else{return parser._xml_to_json(child_nodes[0]);}
 break;case'dict':var dictionary={};var key_name;var key_value;for(var i=0;i<child_nodes.length;++i){var child=child_nodes[i];if(child.nodeName=='#text'){}else if(child.nodeName=='key'){key_name=PlistParser._textValue(child.firstChild);}else{key_value=parser._xml_to_json(child);dictionary[key_name]=key_value;}}
 return dictionary;case'array':var standard_array=[];for(var i=0;i<child_nodes.length;++i){var child=child_nodes[i];standard_array.push(parser._xml_to_json(child));}
@@ -21,8 +21,8 @@ var processObject=function(target,name,value){var key=document.createElement('ke
 target.appendChild(dict);}}else if(typeof value=='boolean'){var bool=document.createElement(value.toString());target.appendChild(bool);}else{var string=document.createElement('string');string.innerHTML=value;target.appendChild(string);}};walkObj(root,obj,processObject);return xml+container.innerHTML;};this.PlistParser=PlistParser})();
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-const debug = $prefs.valueForKey('Journey_debug');
-const $ = API('Journey', debug);
+const $ = API('Journey');
+const debug = $.read('Journey_debug');
 const resBody = PlistParser.parse($response.body);
 const path = $request.path;
 let playerInfoMap = $.read('journeyPlayerInfoMap');
@@ -30,61 +30,61 @@ playerInfoMap = playerInfoMap ? new Map(JSON.parse(playerInfoMap)) : new Map();
 const timesTamp = new Date().getTime();
 const lastTimesTamp = $.read('journeyTimesTamp');
 !(async () => {
-  switch (path) {
-    case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
-      $.log(JSON.stringify(resBody));
-      //运行间隔不得超过1100毫秒，避免重复通知
-      if (resBody.status == 0 && timesTamp - lastTimesTamp > 1100) {
-        $.notify('Journey', '', 'Reconnect');
-        $.info('Reconnect');
-      }
-      break;
-    case '/WebObjects/GKInvitationService.woa/wa/relayInitiate':
-      $.log(JSON.stringify(resBody));
-      if (resBody['self-relay-ip']) {
-        $.notify('Journey', '', 'Start a new connection');
-        $.info('Start a new connection');
-      }
-      break;
-    case '/WebObjects/GKMatchmakerDispatcher.woa/wa/checkMatchStatus':
-      $.log(JSON.stringify(resBody));
-      //运行间隔不得超过1100毫秒，避免重复通知
-      if (!resBody['poll-delay-ms'] && timesTamp - lastTimesTamp > 1100) {
-        let playerId = resBody.matches[0]['player-id'];
-        if (!playerInfoMap.get(playerId)) {
-          $.write(playerId, 'journeyMatchPlayerId');
-        } else {
-          playerId = playerInfoMap.get(playerId);
-        }
-        $.notify('Journey', '', `Matched: ${playerId}`);
-        $.info(`Mathed: ${playerId}`);
-      }
-      break;
-    case '/WebObjects/GKFriendService.woa/wa/getFriendPlayerIds':
-      //获取玩家name和playerId键值对、当前匹配玩家name
-      let playerMatchId = $.read('journeyMatchPlayerId');
-      for (let playerInfo of resBody.results) {
-        let playerId = playerInfo['player-id'];
-        if (playerMatchId && playerId == playerMatchId) {
-          $.notify('Journey', '', `PlayerName: ${playerInfo.alias}`);
-          $.info(`PlayerName: ${playerInfo.alias}`);
-          $.write('', 'journeyMatchPlayerId');
-        }
-        if (!playerInfoMap.get(playerId)) {
-          playerInfoMap.set(playerId, playerInfo.alias);
-        }
-      }
-      $.write(JSON.stringify([...playerInfoMap]), 'journeyPlayerInfoMap');
-      //创建持久化玩家列表，方便下次取值
-      break;
-  }
+    switch (path) {
+        case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
+            if (debug) $.log(JSON.stringify(resBody));
+            //运行间隔不得超过1100毫秒，避免重复通知
+            if (resBody.status == 0 && timesTamp - lastTimesTamp > 1100) {
+                $.notify('Journey', '', 'Reconnect');
+                $.info('Reconnect');
+            }
+            break;
+        case '/WebObjects/GKInvitationService.woa/wa/relayInitiate':
+            if (debug) $.log(JSON.stringify(resBody));
+            if (resBody['self-relay-ip']) {
+                $.notify('Journey', '', 'Start a new connection');
+                $.info('Start a new connection');
+            }
+            break;
+        case '/WebObjects/GKMatchmakerDispatcher.woa/wa/checkMatchStatus':
+            if (debug) $.log(JSON.stringify(resBody));
+            //运行间隔不得超过1100毫秒，避免重复通知
+            if (!resBody['poll-delay-ms'] && timesTamp - lastTimesTamp > 1100) {
+                let playerId = resBody.matches[0]['player-id'];
+                if (!playerInfoMap.get(playerId)) {
+                    $.write(playerId, 'journeyMatchPlayerId');
+                } else {
+                    playerId = playerInfoMap.get(playerId);
+                }
+                $.notify('Journey', '', `Matched: ${playerId}`);
+                $.info(`Mathed: ${playerId}`);
+            }
+            break;
+        case '/WebObjects/GKFriendService.woa/wa/getFriendPlayerIds':
+            //获取玩家name和playerId键值对、当前匹配玩家name
+            let playerMatchId = $.read('journeyMatchPlayerId');
+            for (let playerInfo of resBody.results) {
+                let playerId = playerInfo['player-id'];
+                if (playerMatchId && playerId == playerMatchId) {
+                    $.notify('Journey', '', `PlayerName: ${playerInfo.alias}`);
+                    $.info(`PlayerName: ${playerInfo.alias}`);
+                    $.write('', 'journeyMatchPlayerId');
+                }
+                if (!playerInfoMap.get(playerId)) {
+                    playerInfoMap.set(playerId, playerInfo.alias);
+                }
+            }
+            $.write(JSON.stringify([...playerInfoMap]), 'journeyPlayerInfoMap');
+            //创建持久化玩家列表，方便下次取值
+            break;
+    }
 })()
-  .catch(e => $.error(e.message || e.error || e))
-  .finally(() => {
-    $.write(`${timesTamp}`, 'journeyTimesTamp');
-    $.log(timesTamp - lastTimesTamp);
-    $.done();
-  });
+    .catch((e) => $.error(e.message || e.error || e))
+    .finally(() => {
+        $.write(`${timesTamp}`, 'journeyTimesTamp');
+        if (debug) $.log(timesTamp - lastTimesTamp);
+        $.done();
+    });
 
 /**
  * OpenAPI
