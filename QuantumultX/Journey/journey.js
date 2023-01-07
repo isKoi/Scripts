@@ -21,8 +21,9 @@ var processObject=function(target,name,value){var key=document.createElement('ke
 target.appendChild(dict);}}else if(typeof value=='boolean'){var bool=document.createElement(value.toString());target.appendChild(bool);}else{var string=document.createElement('string');string.innerHTML=value;target.appendChild(string);}};walkObj(root,obj,processObject);return xml+container.innerHTML;};this.PlistParser=PlistParser})();
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-const $ = API('Journey');
-const debug = $.read('Journey_debug');
+let debug;
+const $ = API('Journey', debug);
+debug = $.read('Journey_debug');
 const resBody = PlistParser.parse($response.body);
 const path = $request.path;
 let playerInfoMap = $.read('journeyPlayerInfoMap');
