@@ -22,7 +22,7 @@ target.appendChild(dict);}}else if(typeof value=='boolean'){var bool=document.cr
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 const $ = API('Journey');
-this.debug = $.read('Journey_debug');
+$.debug = $.read('journeyDebug');
 const resBody = PlistParser.parse($response.body);
 const path = $request.path;
 let playerInfoMap = $.read('journeyPlayerInfoMap');
