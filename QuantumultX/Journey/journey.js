@@ -33,7 +33,7 @@ const lastTimesTamp = $.read('journeyTimesTamp');
 !(async () => {
     switch (path) {
         case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
-            if (debug) $.log(JSON.stringify(resBody));
+            $.log(JSON.stringify(resBody));
             //运行间隔不得超过1100毫秒，避免重复通知
             if (resBody.status == 0 && timesTamp - lastTimesTamp > 1100) {
                 $.notify('Journey', '', 'Reconnect');
@@ -41,14 +41,14 @@ const lastTimesTamp = $.read('journeyTimesTamp');
             }
             break;
         case '/WebObjects/GKInvitationService.woa/wa/relayInitiate':
-            if (debug) $.log(JSON.stringify(resBody));
+            $.log(JSON.stringify(resBody));
             if (resBody['self-relay-ip']) {
                 $.notify('Journey', '', 'Start a new connection');
                 $.info('Start a new connection');
             }
             break;
         case '/WebObjects/GKMatchmakerDispatcher.woa/wa/checkMatchStatus':
-            if (debug) $.log(JSON.stringify(resBody));
+            $.log(JSON.stringify(resBody));
             //运行间隔不得超过1100毫秒，避免重复通知
             if (!resBody['poll-delay-ms'] && timesTamp - lastTimesTamp > 1100) {
                 let playerId = resBody.matches[0]['player-id'];
@@ -83,7 +83,7 @@ const lastTimesTamp = $.read('journeyTimesTamp');
     .catch((e) => $.error(e.message || e.error || e))
     .finally(() => {
         $.write(`${timesTamp}`, 'journeyTimesTamp');
-        if (debug) $.log(timesTamp - lastTimesTamp);
+        $.log(timesTamp - lastTimesTamp);
         $.done();
     });
 
