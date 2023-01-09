@@ -22,7 +22,7 @@ target.appendChild(dict);}}else if(typeof value=='boolean'){var bool=document.cr
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 const $ = API('Journey');
-$.debug = $.read('#Journey_debug');
+$.debug = $.read('debug') === 'true';
 const resBody = PlistParser.parse($response.body);
 const path = $request.path;
 let playerInfoMap = $.read('journeyPlayerInfoMap');
@@ -62,13 +62,13 @@ const lastTimesTamp = $.read('journeyTimesTamp');
             break;
         case '/WebObjects/GKFriendService.woa/wa/getFriendPlayerIds':
             //获取玩家name和playerId键值对、当前匹配玩家name
-            let playerMatchId = $.read('journeyMatchPlayerId');
+            let playerMatchId = $.read('journeyMatchPlayerId') === 'true';
             for (let playerInfo of resBody.results) {
                 let playerId = playerInfo['player-id'];
                 if (playerMatchId && playerId == playerMatchId) {
                     $.notify('Journey', '', `PlayerName: ${playerInfo.alias}`);
                     $.info(`PlayerName: ${playerInfo.alias}`);
-                    $.write('', 'journeyMatchPlayerId');
+                    $.delete('journeyMatchPlayerId');
                 }
                 if (!playerInfoMap.get(playerId)) {
                     playerInfoMap.set(playerId, playerInfo.alias);
