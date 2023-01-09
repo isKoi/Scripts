@@ -112,7 +112,7 @@
       ],
       "settings": [
         {
-          "id": "#Journey_debug",
+          "id": "@Journey.debug",
           "name": "Debug 模式",
           "val": false,
           "type": "boolean",
