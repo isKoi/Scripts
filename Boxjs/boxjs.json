@@ -32,10 +32,10 @@
         },
         {
           "id": "Netflix_Notify",
-          "name": "关闭脚本通知",
+          "name": "脚本通知",
           "val": false,
           "type": "boolean",
-          "desc": "关闭切换策略通知"
+          "desc": "开/关切换策略通知"
         },
         {
           "id": "Helge_0x00.Netflix_Retry",
@@ -108,7 +108,10 @@
       "id": "Journey",
       "name": "Journey",
       "keys": [
-        "journeyPlayerInfoMap"
+        "@Journey.debug",
+        "@Journey.playerInfo",
+        "@Journey.matchPlayerId",
+        "@Journey.maxPeers"
       ],
       "settings": [
         {
@@ -117,6 +120,13 @@
           "val": false,
           "type": "boolean",
           "desc": "Debug 模式, 用于调试脚本"
+        },
+        {
+          "id": "@Journey.maxPeers",
+          "name": "最大匹配人数",
+          "val": 2,
+          "type": "number",
+          "desc": "输入数字，最少2个"
         }
       ],
       "author": "@Koi",
