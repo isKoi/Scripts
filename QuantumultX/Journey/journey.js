@@ -26,10 +26,11 @@ const $ = API('Journey');
 $.debug = $.read('debug') === 'true';
 const resBody = $response ? PlistParser.parse($response.body) : undefined;
 const path = $request.path;
-let playerInfoMap = $.read('journeyPlayerInfoMap');
+let playerInfoMap = $.read('playerInfo');
 playerInfoMap = playerInfoMap ? new Map(JSON.parse(playerInfoMap)) : new Map();
+const maxPeers = $.read('maxPeers');
 const timesTamp = new Date().getTime();
-const interval = timesTamp - $.read('journeyTimesTamp');
+const interval = timesTamp - $.read('timesTamp');
 !(async () => {
     switch (path) {
         case '/WebObjects/GKInvitationService.woa/wa/relayUpdate':
@@ -53,7 +54,7 @@ const interval = timesTamp - $.read('journeyTimesTamp');
             if (!resBody['poll-delay-ms'] && interval > 1200) {
                 let playerId = resBody.matches[0]['player-id'];
                 if (!playerInfoMap.get(playerId)) {
-                    $.write(playerId, 'journeyMatchPlayerId');
+                    $.write(playerId, 'matchPlayerId');
                 } else {
                     playerId = playerInfoMap.get(playerId);
                 }
@@ -63,13 +64,13 @@ const interval = timesTamp - $.read('journeyTimesTamp');
             break;
         case '/WebObjects/GKFriendService.woa/wa/getFriendPlayerIds':
             //获取玩家name和playerId键值对、当前匹配玩家name
-            let playerMatchId = $.read('journeyMatchPlayerId') === 'true';
+            let playerMatchId = $.read('matchPlayerId') === 'true';
             for (let playerInfo of resBody.results) {
                 let playerId = playerInfo['player-id'];
                 if (playerMatchId && playerId == playerMatchId) {
                     $.notify('Journey', '', `PlayerName: ${playerInfo.alias}`);
                     $.info(`PlayerName: ${playerInfo.alias}`);
-                    $.delete('journeyMatchPlayerId');
+                    $.delete('matchPlayerId');
                 }
                 if (!playerInfoMap.get(playerId)) {
                     playerInfoMap.set(playerId, playerInfo.alias);
@@ -80,7 +81,7 @@ const interval = timesTamp - $.read('journeyTimesTamp');
             break;
         case '/WebObjects/GKMatchmakerDispatcher.woa/wa/requestMatch':
             let reqBody = PlistParser.parse($request.body);
-            reqBody['max-peers'] = 10;
+            reqBody['max-peers'] = maxPeers;
             $.log(JSON.stringify(reqBody));
             reqBody = PlistParser.toPlist(reqBody);
             $.done(reqBody);
@@ -89,7 +90,7 @@ const interval = timesTamp - $.read('journeyTimesTamp');
 })()
     .catch((e) => $.error(e.message || e.error || e))
     .finally(() => {
-        $.write(`${timesTamp}`, 'journeyTimesTamp');
+        $.write(`${timesTamp}`, 'timesTamp');
         $.log(interval);
         $.done();
     });
