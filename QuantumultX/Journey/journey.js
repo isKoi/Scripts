@@ -37,14 +37,14 @@ const interval = timesTamp - $.read('timesTamp');
             $.log(JSON.stringify(resBody));
             //运行间隔必须大于1200毫秒，避免重复通知
             if (resBody.status == 0 && interval > 1200) {
-                $.notify('Journey', '', 'Reconnect');
+                $.notify('Journey', '', `与重连`);
                 $.info('Reconnect');
             }
             break;
         case '/WebObjects/GKInvitationService.woa/wa/relayInitiate':
             $.log(JSON.stringify(resBody));
             if (resBody['self-relay-ip']) {
-                $.notify('Journey', '', 'Start a new connection');
+                $.notify('Journey', '', `建立新连接`);
                 $.info('Start a new connection');
             }
             break;
@@ -58,17 +58,17 @@ const interval = timesTamp - $.read('timesTamp');
                 } else {
                     playerId = playerInfoMap.get(playerId);
                 }
-                $.notify('Journey', '', `Matched: ${playerId}`);
+                $.notify('Journey', '匹配到玩家', `${playerId}`);
                 $.info(`Mathed: ${playerId}`);
             }
             break;
         case '/WebObjects/GKFriendService.woa/wa/getFriendPlayerIds':
             //获取玩家name和playerId键值对、当前匹配玩家name
-            let playerMatchId = $.read('matchPlayerId') === 'true';
+            let playerMatchId = $.read('matchPlayerId') || undefined;
             for (let playerInfo of resBody.results) {
                 let playerId = playerInfo['player-id'];
                 if (playerMatchId && playerId == playerMatchId) {
-                    $.notify('Journey', '', `PlayerName: ${playerInfo.alias}`);
+                    $.notify('Journey', playerMatchId, `玩家名称: ${playerInfo.alias}`);
                     $.info(`PlayerName: ${playerInfo.alias}`);
                     $.delete('matchPlayerId');
                 }
@@ -76,7 +76,7 @@ const interval = timesTamp - $.read('timesTamp');
                     playerInfoMap.set(playerId, playerInfo.alias);
                 }
             }
-            $.write(JSON.stringify([...playerInfoMap]), 'journeyPlayerInfoMap');
+            $.write(JSON.stringify([...playerInfoMap]), 'playerInfo');
             //创建持久化玩家列表，方便下次取值
             break;
         case '/WebObjects/GKMatchmakerDispatcher.woa/wa/requestMatch':
