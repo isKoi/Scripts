@@ -9,9 +9,10 @@
 ```properties
 # 本地配置
 [rewrite_local]
-^https:\/\/invitation\.gc\.apple\.com\/WebObjects\/GKInvitationService\.woa\/wa\/(relayInitiate|relayUpdate) url script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
-^https:\/\/match\.gc\.apple\.com\/WebObjects\/GKMatchmakerDispatcher\.woa\/wa\/checkMatchStatus url script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
+^https:\/\/invitation\.gc\.apple\.com\/WebObjects\/GKInvitationService\.woa\/wa\/(relayInitiate|relayUpdate) x-gk-bundle-id: AP-Journey url-and-header script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
+^https:\/\/match\.gc\.apple\.com\/WebObjects\/GKMatchmakerDispatcher\.woa\/wa\/checkMatchStatus x-gk-bundle-id: AP-Journey url-and-header script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
 ^https:\/\/friend\.gc\.apple\.com\/WebObjects\/GKFriendService\.woa\/wa\/getFriendPlayerIds url script-response-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
+^https:\/\/match\.gc\.apple\.com\/WebObjects\/GKMatchmakerDispatcher\.woa\/wa\/requestMatch x-gk-bundle-id: AP-Journey url-and-header script-request-body https://github.com/qianli-Koi/Scripts/raw/master/QuantumultX/Journey/journey.js
 
 [MITM]
 hostname=match.gc.apple.com,invitation.gc.apple.com,friend.gc.apple.com
